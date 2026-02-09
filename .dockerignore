@@ -1,0 +1,16 @@
+node_modules
+vendor
+.git
+.gitignore
+.env
+.env.backup
+.phpunit.result.cache
+storage
+bootstrap/cache
+*.md
+!README.md
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+*.log
