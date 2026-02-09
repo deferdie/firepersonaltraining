@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Link } from '@inertiajs/vue3';
 import TrainerLayout from '@/Layouts/TrainerLayout.vue';
 import {
     Send,
@@ -70,10 +70,8 @@ const tabs = [
 </script>
 
 <template>
-    <Head :title="`${client.name} - Client Profile`" />
-
-    <TrainerLayout>
-        <div class="max-w-7xl mx-auto pb-8">
+    <TrainerLayout :title="`${client.name} - Client Profile`" :show-header="false">
+        <div>
             <!-- Compact Client Info -->
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-4">

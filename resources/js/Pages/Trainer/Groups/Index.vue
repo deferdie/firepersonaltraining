@@ -1,9 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import TrainerLayout from '@/Layouts/TrainerLayout.vue';
 import { UsersRound, Users, Calendar, Plus } from 'lucide-vue-next';
-import PageHeader from '@/Components/molecules/PageHeader.vue';
 import SearchInput from '@/Components/molecules/SearchInput.vue';
 import EmptyState from '@/Components/molecules/EmptyState.vue';
 import StatCard from '@/Components/molecules/StatCard.vue';
@@ -55,16 +54,12 @@ const handleSearch = () => {
 </script>
 
 <template>
-    <Head title="Groups" />
-
-    <TrainerLayout>
+    <TrainerLayout
+        title="Groups"
+        description="Organize and manage clients in groups"
+    >
         <div class="space-y-6">
-            <!-- Header -->
             <div class="flex items-center justify-between">
-                <PageHeader
-                    title="Groups"
-                    description="Organize and manage clients in groups"
-                />
                 <Button @click="isAddGroupModalOpen = true">
                     <Plus class="size-4 mr-2" />
                     Add Group

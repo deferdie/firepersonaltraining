@@ -1,8 +1,25 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
-import { Link, router, usePage } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import FlashMessage from '@/Components/molecules/FlashMessage.vue';
 import BackLink from '@/Components/molecules/BackLink.vue';
+import PageHeader from '@/Components/molecules/PageHeader.vue';
+
+defineProps({
+    title: {
+        type: String,
+        default: '',
+    },
+    description: {
+        type: String,
+        default: '',
+    },
+    /** When false, only set document title (Head); do not show PageHeader. Use for detail pages with custom headers. */
+    showHeader: {
+        type: Boolean,
+        default: true,
+    },
+});
 import {
     LayoutGrid,
     Users,
@@ -162,6 +179,7 @@ const handleLogout = () => {
 
 <template>
     <div class="min-h-screen bg-gray-50">
+        <Head v-if="title" :title="title" />
         <!-- Desktop Sidebar -->
         <aside class="hidden md:fixed md:inset-y-0 md:flex md:w-72 md:flex-col">
             <div class="flex flex-col flex-grow bg-white border-r border-gray-200">
@@ -283,6 +301,9 @@ const handleLogout = () => {
                 </div>
                 <div v-if="backLinkConfig" class="mb-6">
                     <BackLink :href="backLinkConfig.href" :label="backLinkConfig.label" />
+                </div>
+                <div v-if="title && showHeader" class="mb-6">
+                    <PageHeader :title="title" :description="description" />
                 </div>
                 <slot />
             </div>

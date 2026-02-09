@@ -6,31 +6,28 @@ use App\Models\Concerns\ScopedByTrainer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Program extends Model
+class LibraryMealPlan extends Model
 {
     use HasFactory, ScopedByTrainer;
+
+    protected $table = 'library_meal_plans';
 
     protected $fillable = [
         'trainer_id',
         'name',
         'description',
         'weeks',
+        'meals',
+        'calories_target',
+    ];
+
+    protected $casts = [
+        'meals' => 'array',
     ];
 
     public function trainer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'trainer_id');
-    }
-
-    public function workouts(): HasMany
-    {
-        return $this->hasMany(Workout::class);
-    }
-
-    public function clientPrograms(): HasMany
-    {
-        return $this->hasMany(ClientProgram::class);
     }
 }

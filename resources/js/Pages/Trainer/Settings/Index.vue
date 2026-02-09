@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue';
-import { Head, useForm } from '@inertiajs/vue3';
+import { useForm } from '@inertiajs/vue3';
 import TrainerLayout from '@/Layouts/TrainerLayout.vue';
 import Tabs from '@/Components/molecules/Tabs.vue';
 import Card from '@/Components/molecules/Card.vue';
@@ -61,11 +61,8 @@ const saveGeneral = () => {
 </script>
 
 <template>
-    <Head title="Settings" />
-
-    <TrainerLayout>
+    <TrainerLayout title="Settings">
         <div class="max-w-4xl mx-auto pb-8">
-            <h1 class="text-2xl font-bold text-gray-900 mb-6">Settings</h1>
 
             <Tabs v-model="activeTab" :tabs="tabs" />
 

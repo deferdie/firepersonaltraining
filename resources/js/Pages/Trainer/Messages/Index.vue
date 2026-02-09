@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
-import { Head, router } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 import TrainerLayout from '@/Layouts/TrainerLayout.vue';
 import { MessageSquare } from 'lucide-vue-next';
 import ConversationList from '@/Components/organisms/ConversationList.vue';
@@ -146,9 +146,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Head title="Messages" />
-
-    <TrainerLayout>
+    <TrainerLayout title="Messages">
         <div class="flex h-[calc(100vh-8rem)] bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
             <ConversationList
                 :conversations="conversations"

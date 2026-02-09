@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Head, router, usePage } from '@inertiajs/vue3';
+import { router, usePage } from '@inertiajs/vue3';
 import TrainerLayout from '@/Layouts/TrainerLayout.vue';
 import {
     MessageSquare,
@@ -75,10 +75,8 @@ const handleInsightAction = (insight) => {
 </script>
 
 <template>
-    <Head :title="`${group.name} - Group`" />
-
-    <TrainerLayout>
-        <div class="max-w-7xl mx-auto pb-8">
+    <TrainerLayout :title="`${group.name} - Group`" :show-header="false">
+        <div>
             <!-- Header -->
             <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6">
                 <div class="flex items-start justify-between mb-6">
