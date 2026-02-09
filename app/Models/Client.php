@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Client extends Model
 {
@@ -53,5 +55,17 @@ class Client extends Model
     public function activityFeeds(): HasMany
     {
         return $this->hasMany(ActivityFeed::class);
+    }
+
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_client')
+            ->withTimestamps();
+    }
+
+    public function conversation(): HasOne
+    {
+        return $this->hasOne(Conversation::class, 'target_id')
+            ->where('type', 'client');
     }
 }

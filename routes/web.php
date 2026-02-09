@@ -3,6 +3,7 @@
 use App\Http\Controllers\Client\Auth\AuthenticatedSessionController as ClientAuthenticatedSessionController;
 use App\Http\Controllers\Client\Auth\RegisteredUserController as ClientRegisteredUserController;
 use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
+use App\Http\Controllers\Client\MessagesController as ClientMessagesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Trainer\Auth\AuthenticatedSessionController as TrainerAuthenticatedSessionController;
 use App\Http\Controllers\Trainer\Auth\RegisteredUserController as TrainerRegisteredUserController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardControll
 use App\Http\Controllers\Trainer\ClientsController as TrainerClientsController;
 use App\Http\Controllers\Trainer\ClientInvitationController as TrainerClientInvitationController;
 use App\Http\Controllers\Trainer\ClientNoteController as TrainerClientNoteController;
+use App\Http\Controllers\Trainer\GroupsController as TrainerGroupsController;
+use App\Http\Controllers\Trainer\MessagesController as TrainerMessagesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -53,13 +56,17 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
         // Client notes routes
         Route::post('/clients/{client}/notes', [TrainerClientNoteController::class, 'store'])->name('clients.notes.store');
         
-        Route::get('/groups', function () {
-            return redirect()->route('trainer.dashboard');
-        })->name('groups.index');
+        // Groups routes
+        Route::get('/groups', [TrainerGroupsController::class, 'index'])->name('groups.index');
+        Route::post('/groups', [TrainerGroupsController::class, 'store'])->name('groups.store');
+        Route::get('/groups/{group}', [TrainerGroupsController::class, 'show'])->name('groups.show');
+        Route::post('/groups/{group}/members', [TrainerGroupsController::class, 'storeMembers'])->name('groups.members.store');
+        Route::delete('/groups/{group}/members/{client}', [TrainerGroupsController::class, 'destroyMember'])->name('groups.members.destroy');
         
-        Route::get('/messages', function () {
-            return redirect()->route('trainer.dashboard');
-        })->name('messages.index');
+        Route::get('/messages', [TrainerMessagesController::class, 'index'])->name('messages.index');
+        Route::get('/messages/{conversation}', [TrainerMessagesController::class, 'show'])->name('messages.show');
+        Route::post('/messages', [TrainerMessagesController::class, 'store'])->name('messages.store');
+        Route::patch('/messages/{conversation}', [TrainerMessagesController::class, 'update'])->name('messages.update');
         
         Route::get('/library', function () {
             return redirect()->route('trainer.dashboard');
@@ -102,6 +109,8 @@ Route::prefix('client')->name('client.')->group(function () {
 
     Route::middleware(['auth', 'client'])->group(function () {
         Route::get('/dashboard', [ClientDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/messages', [ClientMessagesController::class, 'store'])->name('messages.store');
+        Route::post('/conversations/{conversation}/mark-read', [ClientMessagesController::class, 'markRead'])->name('conversations.mark-read');
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

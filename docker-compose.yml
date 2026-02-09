@@ -42,6 +42,7 @@ services:
       - fitness-app-network
     ports:
       - "5174:5174"
+      - "8080:8080"
 
 
   mysql:

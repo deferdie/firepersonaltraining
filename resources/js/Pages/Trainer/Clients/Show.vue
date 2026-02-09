@@ -3,7 +3,6 @@ import { ref } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import TrainerLayout from '@/Layouts/TrainerLayout.vue';
 import {
-    ArrowLeft,
     Send,
     LogIn,
     KeyRound,
@@ -75,17 +74,7 @@ const tabs = [
 
     <TrainerLayout>
         <div class="max-w-7xl mx-auto pb-8">
-            <!-- Minimal Header -->
-            <div class="mb-6">
-                <Link
-                    :href="route('trainer.clients.index')"
-                    class="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6"
-                >
-                    <ArrowLeft class="size-4 mr-2" />
-                    Back to Clients
-                </Link>
-
-                <!-- Compact Client Info -->
+            <!-- Compact Client Info -->
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center gap-4">
                         <Avatar

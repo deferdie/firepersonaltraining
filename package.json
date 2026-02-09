@@ -24,7 +24,9 @@
     },
     "dependencies": {
         "@inertiajs/vue3": "^1.0",
+        "laravel-echo": "^2.3.0",
         "lucide-vue-next": "^0.460",
+        "pusher-js": "^8.4.0",
         "vue": "^3.4"
     }
 }

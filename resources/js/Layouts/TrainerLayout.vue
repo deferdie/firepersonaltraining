@@ -1,6 +1,8 @@
 <script setup>
-import { ref } from 'vue';
-import { Link, router } from '@inertiajs/vue3';
+import { ref, computed, watch } from 'vue';
+import { Link, router, usePage } from '@inertiajs/vue3';
+import FlashMessage from '@/Components/molecules/FlashMessage.vue';
+import BackLink from '@/Components/molecules/BackLink.vue';
 import {
     LayoutGrid,
     Users,
@@ -22,6 +24,33 @@ import {
 import Button from '@/Components/atoms/Button.vue';
 
 const mobileMenuOpen = ref(false);
+const flashDismissed = ref(false);
+const page = usePage();
+
+const flash = computed(() => {
+    const f = page.props.flash;
+    if (!f || flashDismissed.value) return null;
+    for (const key of ['success', 'error', 'warning', 'info', 'status']) {
+        if (f[key]) return { type: key, message: f[key] };
+    }
+    return null;
+});
+
+watch(() => page.url, () => { flashDismissed.value = false; });
+
+const backLinkConfig = computed(() => {
+    try {
+        const current = route().current();
+        const map = {
+            'trainer.clients.show': { href: route('trainer.clients.index'), label: 'Back to Clients' },
+            'trainer.groups.show': { href: route('trainer.groups.index'), label: 'Back to Groups' },
+            'trainer.messages.show': { href: route('trainer.messages.index'), label: 'Back to Messages' },
+        };
+        return map[current] ?? null;
+    } catch {
+        return null;
+    }
+});
 
 const navItems = [
     { path: '/trainer/dashboard', label: 'Dashboard', icon: LayoutGrid, routeName: 'trainer.dashboard' },
@@ -71,6 +100,10 @@ const isActive = (item) => {
             if (item.routeName === 'trainer.website.index' && currentRoute.startsWith('trainer.website')) {
                 return true;
             }
+            // For messages sub-pages, highlight the Messages nav item
+            if (item.routeName === 'trainer.messages.index' && currentRoute.startsWith('trainer.messages')) {
+                return true;
+            }
         }
         
         // Fallback to pathname checking
@@ -99,6 +132,9 @@ const isActive = (item) => {
         }
         // For website sub-pages, highlight the My Website nav item
         if (itemPath === '/trainer/website' && currentPath.startsWith('/trainer/website')) {
+            return true;
+        }
+        if (itemPath === '/trainer/messages' && currentPath.startsWith('/trainer/messages')) {
             return true;
         }
         return currentPath === itemPath;
@@ -229,6 +265,16 @@ const handleLogout = () => {
         <!-- Main Content -->
         <main class="md:pl-72">
             <div class="p-4 md:p-8">
+                <div v-if="flash" class="mb-6">
+                    <FlashMessage
+                        :type="flash.type"
+                        :message="flash.message"
+                        @dismiss="flashDismissed = true"
+                    />
+                </div>
+                <div v-if="backLinkConfig" class="mb-6">
+                    <BackLink :href="backLinkConfig.href" :label="backLinkConfig.label" />
+                </div>
                 <slot />
             </div>
         </main>
