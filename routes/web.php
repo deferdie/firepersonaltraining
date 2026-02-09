@@ -13,6 +13,7 @@ use App\Http\Controllers\Trainer\ClientInvitationController as TrainerClientInvi
 use App\Http\Controllers\Trainer\ClientNoteController as TrainerClientNoteController;
 use App\Http\Controllers\Trainer\GroupsController as TrainerGroupsController;
 use App\Http\Controllers\Trainer\MessagesController as TrainerMessagesController;
+use App\Http\Controllers\Trainer\SettingsController as TrainerSettingsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -95,6 +96,9 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
         Route::get('/website', function () {
             return redirect()->route('trainer.dashboard');
         })->name('website.index');
+
+        Route::get('/settings', [TrainerSettingsController::class, 'index'])->name('settings.index');
+        Route::patch('/settings', [TrainerSettingsController::class, 'update'])->name('settings.update');
     });
 });
 

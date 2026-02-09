@@ -18,6 +18,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_trainer',
+        'timezone',
     ];
 
     protected $hidden = [
@@ -47,5 +48,10 @@ class User extends Authenticatable
     public function conversations(): HasMany
     {
         return $this->hasMany(Conversation::class, 'trainer_id');
+    }
+
+    public function trainerSubscription(): HasOne
+    {
+        return $this->hasOne(TrainerSubscription::class);
     }
 }

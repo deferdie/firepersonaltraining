@@ -20,6 +20,7 @@ import {
     LogOut,
     Menu,
     X,
+    Settings,
 } from 'lucide-vue-next';
 import Button from '@/Components/atoms/Button.vue';
 
@@ -64,6 +65,7 @@ const navItems = [
     { path: '/trainer/billing', label: 'Billing', icon: CreditCard, routeName: 'trainer.billing.index' },
     { path: '/trainer/app', label: 'Mobile App', icon: Smartphone, routeName: 'trainer.app.index' },
     { path: '/trainer/website', label: 'My Website', icon: Globe, routeName: 'trainer.website.index' },
+    { path: '/trainer/settings', label: 'Settings', icon: Settings, routeName: 'trainer.settings.index' },
 ];
 
 const isActive = (item) => {
@@ -104,6 +106,10 @@ const isActive = (item) => {
             if (item.routeName === 'trainer.messages.index' && currentRoute.startsWith('trainer.messages')) {
                 return true;
             }
+            // For settings sub-pages, highlight the Settings nav item
+            if (item.routeName === 'trainer.settings.index' && currentRoute.startsWith('trainer.settings')) {
+                return true;
+            }
         }
         
         // Fallback to pathname checking
@@ -135,6 +141,9 @@ const isActive = (item) => {
             return true;
         }
         if (itemPath === '/trainer/messages' && currentPath.startsWith('/trainer/messages')) {
+            return true;
+        }
+        if (itemPath === '/trainer/settings' && currentPath.startsWith('/trainer/settings')) {
             return true;
         }
         return currentPath === itemPath;
