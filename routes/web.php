@@ -8,6 +8,7 @@ use App\Http\Controllers\Trainer\Auth\AuthenticatedSessionController as TrainerA
 use App\Http\Controllers\Trainer\Auth\RegisteredUserController as TrainerRegisteredUserController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Http\Controllers\Trainer\ClientsController as TrainerClientsController;
+use App\Http\Controllers\Trainer\ClientInvitationController as TrainerClientInvitationController;
 use App\Http\Controllers\Trainer\ClientNoteController as TrainerClientNoteController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +46,9 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
         Route::get('/clients', [TrainerClientsController::class, 'index'])->name('clients.index');
         Route::post('/clients', [TrainerClientsController::class, 'store'])->name('clients.store');
         Route::get('/clients/{client}', [TrainerClientsController::class, 'show'])->name('clients.show');
+        Route::post('/clients/{client}/send-signup-invitation', [TrainerClientInvitationController::class, 'store'])
+            ->middleware('throttle:10,1')
+            ->name('clients.send-signup-invitation');
         
         // Client notes routes
         Route::post('/clients/{client}/notes', [TrainerClientNoteController::class, 'store'])->name('clients.notes.store');

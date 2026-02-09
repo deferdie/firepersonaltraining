@@ -7,6 +7,7 @@ import {
     Send,
     LogIn,
     KeyRound,
+    Mail,
     Trash2,
     Flame,
     Dumbbell,
@@ -106,11 +107,25 @@ const tabs = [
                     </div>
 
                     <div class="flex gap-2">
+                        <Link
+                            v-if="!client.has_completed_signup"
+                            :href="route('trainer.clients.send-signup-invitation', client.id)"
+                            method="post"
+                            as="button"
+                            class="inline-flex items-center justify-center rounded-md border border-transparent bg-gray-900 px-3 py-1.5 text-sm font-medium text-white shadow hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+                        >
+                            <Mail class="size-4 mr-2" />
+                            Request signup
+                        </Link>
                         <Button size="sm">
                             <Send class="size-4 mr-2" />
                             Message
                         </Button>
-                        <Button variant="outline" size="sm">
+                        <Button
+                            v-if="client.has_completed_signup"
+                            variant="outline"
+                            size="sm"
+                        >
                             <LogIn class="size-4 mr-2" />
                             Login to Client Dashboard
                         </Button>

@@ -6,12 +6,26 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 
-const form = useForm({
-    name: '',
-    email: '',
+const props = defineProps({
+    invitation: {
+        type: Object,
+        default: null,
+    },
+});
+
+const initialData = {
+    name: props.invitation?.name ?? '',
+    email: props.invitation?.email ?? '',
     password: '',
     password_confirmation: '',
-});
+};
+if (props.invitation) {
+    initialData.client_id = props.invitation.client_id;
+    initialData.expires = props.invitation.expires;
+    initialData.signature = props.invitation.signature;
+}
+
+const form = useForm(initialData);
 
 const submit = () => {
     form.post(route('client.register'), {
@@ -25,6 +39,11 @@ const submit = () => {
         <Head title="Client Register" />
 
         <form @submit.prevent="submit">
+            <template v-if="invitation">
+                <input type="hidden" name="client_id" :value="form.client_id" />
+                <input type="hidden" name="expires" :value="form.expires" />
+                <input type="hidden" name="signature" :value="form.signature" />
+            </template>
             <div>
                 <InputLabel for="name" value="Name" />
 

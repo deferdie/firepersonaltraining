@@ -90,6 +90,7 @@ class ClientsController extends Controller
                 'program' => $programName,
                 'joinDate' => $client->created_at->format('Y-m-d'),
                 'created_at' => $client->created_at,
+                'has_completed_signup' => $client->user_id !== null,
             ];
         });
 
@@ -405,6 +406,7 @@ class ClientsController extends Controller
                 'program' => $programName,
                 'joinDate' => $client->created_at->format('Y-m-d'),
                 'lastActive' => $lastActive,
+                'has_completed_signup' => $client->user_id !== null,
             ],
             'stats' => [
                 'streak' => $streak,

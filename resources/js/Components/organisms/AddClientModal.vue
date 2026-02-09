@@ -118,30 +118,9 @@ const handleClose = () => {
 
             <!-- Program & Status -->
             <div class="space-y-4">
-                <h3 class="font-semibold text-sm text-gray-700">Program & Status</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <Label for="program">Assign Program</Label>
-                        <Select v-model="form.program_id" placeholder="Select a program" :disabled="form.processing">
-                            <SelectTrigger id="program" />
-                            <SelectContent>
-                                <SelectItem :value="null" label="No Program Yet">
-                                    No Program Yet
-                                </SelectItem>
-                                <SelectItem
-                                    v-for="program in programs"
-                                    :key="program.id"
-                                    :value="program.id"
-                                    :label="program.name"
-                                >
-                                    {{ program.name }}
-                                </SelectItem>
-                            </SelectContent>
-                        </Select>
-                        <InputError :message="form.errors.program_id" />
-                    </div>
-
+                 
                     <div class="space-y-2">
                         <Label for="status">Status</Label>
                         <Select v-model="form.status" :disabled="form.processing">
@@ -157,34 +136,6 @@ const handleClose = () => {
                 </div>
             </div>
 
-            <!-- Additional Information -->
-            <div class="space-y-4">
-                <h3 class="font-semibold text-sm text-gray-700">Additional Information</h3>
-                
-                <div class="space-y-2">
-                    <Label for="goals">Goals</Label>
-                    <Textarea
-                        id="goals"
-                        v-model="form.goals"
-                        :rows="3"
-                        placeholder="What are this client's fitness goals?"
-                        :disabled="form.processing"
-                    />
-                    <InputError :message="form.errors.goals" />
-                </div>
-
-                <div class="space-y-2">
-                    <Label for="notes">Initial Notes</Label>
-                    <Textarea
-                        id="notes"
-                        v-model="form.notes"
-                        :rows="3"
-                        placeholder="Any important information about this client?"
-                        :disabled="form.processing"
-                    />
-                    <InputError :message="form.errors.notes" />
-                </div>
-            </div>
 
             <!-- Actions -->
             <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
