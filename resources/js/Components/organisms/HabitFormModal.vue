@@ -88,7 +88,7 @@ const submitLabel = () =>
         max-width="2xl"
         @close="handleClose"
     >
-        <form @submit.prevent="handleSubmit" class="space-y-6">
+        <form id="habit-form" @submit.prevent="handleSubmit" class="space-y-6">
             <div class="space-y-4">
                 <div class="space-y-2">
                     <Label for="habit-name" :required="true">Name</Label>
@@ -113,8 +113,9 @@ const submitLabel = () =>
                     <InputError :message="form.errors.description" />
                 </div>
             </div>
-
-            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-200">
+        </form>
+        <template #footer>
+            <div class="flex items-center justify-end gap-3">
                 <Button
                     type="button"
                     variant="outline"
@@ -125,11 +126,12 @@ const submitLabel = () =>
                 </Button>
                 <Button
                     type="submit"
+                    form="habit-form"
                     :disabled="form.processing"
                 >
                     {{ submitLabel() }}
                 </Button>
             </div>
-        </form>
+        </template>
     </DialogModal>
 </template>

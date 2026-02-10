@@ -89,13 +89,13 @@ const handleBackdropClick = (e) => {
                 <div
                     v-if="isOpen"
                     :class="[
-                        'bg-white rounded-xl shadow-xl w-full max-h-[90vh] overflow-y-auto',
+                        'bg-white rounded-xl shadow-xl w-full max-h-[90vh] flex flex-col',
                         maxWidthClasses[maxWidth]
                     ]"
                     @click.stop
                 >
-                    <!-- Header -->
-                    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                    <!-- Sticky header -->
+                    <div class="sticky top-0 z-10 flex shrink-0 items-center justify-between border-b border-gray-200 bg-white p-6 rounded-t-xl">
                         <div>
                             <h2 class="text-xl font-semibold">{{ title }}</h2>
                             <p v-if="description" class="text-sm text-gray-500 mt-1">
@@ -111,13 +111,13 @@ const handleBackdropClick = (e) => {
                         </button>
                     </div>
 
-                    <!-- Content -->
-                    <div class="p-6">
+                    <!-- Scrollable content -->
+                    <div class="min-h-0 flex-1 overflow-y-auto p-6">
                         <slot />
                     </div>
 
                     <!-- Footer (optional) -->
-                    <div v-if="$slots.footer" class="p-6 border-t border-gray-200">
+                    <div v-if="$slots.footer" class="shrink-0 border-t border-gray-200 p-6 bg-white rounded-b-xl">
                         <slot name="footer" />
                     </div>
                 </div>

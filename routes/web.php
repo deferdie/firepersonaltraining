@@ -21,6 +21,7 @@ use App\Http\Controllers\Trainer\GroupHabitController as TrainerGroupHabitContro
 use App\Http\Controllers\Trainer\GroupsController as TrainerGroupsController;
 use App\Http\Controllers\Trainer\MessagesController as TrainerMessagesController;
 use App\Http\Controllers\Trainer\LibraryController as TrainerLibraryController;
+use App\Http\Controllers\Trainer\LibraryDocumentsController as TrainerLibraryDocumentsController;
 use App\Http\Controllers\Trainer\LibraryHabitsController as TrainerLibraryHabitsController;
 use App\Http\Controllers\Trainer\SettingsController as TrainerSettingsController;
 use Illuminate\Foundation\Application;
@@ -99,7 +100,12 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
         Route::get('/library/forms', fn () => redirect()->route('trainer.library.index'))->name('library.forms.index');
         Route::get('/library/assessments', fn () => redirect()->route('trainer.library.index'))->name('library.assessments.index');
         Route::get('/library/videos', fn () => redirect()->route('trainer.library.index'))->name('library.videos.index');
-        Route::get('/library/documents', fn () => redirect()->route('trainer.library.index'))->name('library.documents.index');
+        Route::get('/library/documents', [TrainerLibraryDocumentsController::class, 'index'])->name('library.documents.index');
+        Route::get('/library/documents/list', [TrainerLibraryDocumentsController::class, 'list'])->name('library.documents.list');
+        Route::post('/library/documents', [TrainerLibraryDocumentsController::class, 'store'])->name('library.documents.store');
+        Route::patch('/library/documents/{document}', [TrainerLibraryDocumentsController::class, 'update'])->name('library.documents.update');
+        Route::delete('/library/documents/{document}', [TrainerLibraryDocumentsController::class, 'destroy'])->name('library.documents.destroy');
+        Route::get('/library/documents/{document}/download', [TrainerLibraryDocumentsController::class, 'download'])->name('library.documents.download');
         Route::get('/library/habits', [TrainerLibraryHabitsController::class, 'index'])->name('library.habits.index');
         Route::get('/library/habits/list', [TrainerLibraryHabitsController::class, 'list'])->name('library.habits.list');
         Route::post('/library/habits', [TrainerLibraryHabitsController::class, 'store'])->name('library.habits.store');
