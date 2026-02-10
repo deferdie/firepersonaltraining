@@ -58,14 +58,14 @@ const handleSearch = () => {
         title="Groups"
         description="Organize and manage clients in groups"
     >
-        <div class="space-y-6">
-            <div class="flex items-center justify-between">
-                <Button @click="isAddGroupModalOpen = true">
-                    <Plus class="size-4 mr-2" />
-                    Add Group
-                </Button>
-            </div>
+        <template #action>
+            <Button @click="isAddGroupModalOpen = true">
+                <Plus class="size-4 mr-2" />
+                Add Group
+            </Button>
+        </template>
 
+        <div class="space-y-6">
             <!-- Stats Cards -->
             <div class="grid gap-4 md:grid-cols-3">
                 <StatCard

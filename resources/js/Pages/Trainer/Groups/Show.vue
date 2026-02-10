@@ -18,6 +18,7 @@ import {
 import Avatar from '@/Components/atoms/Avatar.vue';
 import Badge from '@/Components/atoms/Badge.vue';
 import Button from '@/Components/atoms/Button.vue';
+import StatCard from '@/Components/molecules/StatCard.vue';
 import Tabs from '@/Components/molecules/Tabs.vue';
 import AddGroupMembersModal from '@/Components/organisms/AddGroupMembersModal.vue';
 import GroupOverviewSection from '@/Components/organisms/GroupOverviewSection.vue';
@@ -136,36 +137,26 @@ const handleInsightAction = (insight) => {
 
                 <!-- Stats Bar -->
                 <div class="grid grid-cols-4 gap-4">
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <div class="flex items-center gap-2 mb-1">
-                            <Activity class="size-4 text-gray-500" />
-                            <p class="text-sm text-gray-500">Avg. Adherence</p>
-                        </div>
-                        <p class="text-2xl font-bold">{{ stats?.avg_adherence ?? 0 }}%</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <div class="flex items-center gap-2 mb-1">
-                            <Users class="size-4 text-gray-500" />
-                            <p class="text-sm text-gray-500">Active Members</p>
-                        </div>
-                        <p class="text-2xl font-bold">
-                            {{ stats?.active_members ?? 0 }}/{{ group.members_count ?? 0 }}
-                        </p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <div class="flex items-center gap-2 mb-1">
-                            <Dumbbell class="size-4 text-gray-500" />
-                            <p class="text-sm text-gray-500">Total Workouts</p>
-                        </div>
-                        <p class="text-2xl font-bold">{{ stats?.total_workouts ?? 0 }}</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-lg p-4">
-                        <div class="flex items-center gap-2 mb-1">
-                            <BarChart3 class="size-4 text-gray-500" />
-                            <p class="text-sm text-gray-500">Avg. Per Week</p>
-                        </div>
-                        <p class="text-2xl font-bold">{{ stats?.avg_workouts_per_week ?? 0 }}</p>
-                    </div>
+                    <StatCard
+                        title="Avg. Adherence"
+                        :value="`${stats?.avg_adherence ?? 0}%`"
+                        :icon="Activity"
+                    />
+                    <StatCard
+                        title="Active Members"
+                        :value="`${stats?.active_members ?? 0}/${group.members_count ?? 0}`"
+                        :icon="Users"
+                    />
+                    <StatCard
+                        title="Total Workouts"
+                        :value="stats?.total_workouts ?? 0"
+                        :icon="Dumbbell"
+                    />
+                    <StatCard
+                        title="Avg. Per Week"
+                        :value="stats?.avg_workouts_per_week ?? 0"
+                        :icon="BarChart3"
+                    />
                 </div>
             </div>
 

@@ -25,8 +25,7 @@ import {
 import Avatar from '@/Components/atoms/Avatar.vue';
 import Badge from '@/Components/atoms/Badge.vue';
 import Button from '@/Components/atoms/Button.vue';
-import Card from '@/Components/molecules/Card.vue';
-import CardContent from '@/Components/molecules/CardContent.vue';
+import StatCard from '@/Components/molecules/StatCard.vue';
 import Tabs from '@/Components/molecules/Tabs.vue';
 import ActivitySection from '@/Components/organisms/ActivitySection.vue';
 import GoalsSection from '@/Components/organisms/GoalsSection.vue';
@@ -133,44 +132,26 @@ const tabs = [
 
                 <!-- Key Metrics Bar - Compact -->
                 <div class="grid grid-cols-4 gap-3 mb-6">
-                    <Card>
-                        <CardContent class="p-3">
-                            <div class="flex items-center gap-2 mb-1">
-                                <Flame class="size-4 text-orange-500" />
-                                <span class="text-xs text-gray-500">Streak</span>
-                            </div>
-                            <p class="text-2xl font-bold">{{ stats.streak }}</p>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent class="p-3">
-                            <div class="flex items-center gap-2 mb-1">
-                                <Dumbbell class="size-4 text-blue-600" />
-                                <span class="text-xs text-gray-500">Completed</span>
-                            </div>
-                            <p class="text-2xl font-bold">
-                                {{ stats.workoutsCompleted }}/{{ stats.workoutsTotal }}
-                            </p>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent class="p-3">
-                            <div class="flex items-center gap-2 mb-1">
-                                <TrendingUp class="size-4 text-green-600" />
-                                <span class="text-xs text-gray-500">Adherence</span>
-                            </div>
-                            <p class="text-2xl font-bold">{{ stats.adherence }}%</p>
-                        </CardContent>
-                    </Card>
-                    <Card>
-                        <CardContent class="p-3">
-                            <div class="flex items-center gap-2 mb-1">
-                                <Clock class="size-4 text-purple-600" />
-                                <span class="text-xs text-gray-500">Avg Session</span>
-                            </div>
-                            <p class="text-2xl font-bold">{{ stats.avgDuration }}m</p>
-                        </CardContent>
-                    </Card>
+                    <StatCard
+                        title="Streak"
+                        :value="stats.streak"
+                        :icon="Flame"
+                    />
+                    <StatCard
+                        title="Completed"
+                        :value="`${stats.workoutsCompleted}/${stats.workoutsTotal}`"
+                        :icon="Dumbbell"
+                    />
+                    <StatCard
+                        title="Adherence"
+                        :value="`${stats.adherence}%`"
+                        :icon="TrendingUp"
+                    />
+                    <StatCard
+                        title="Avg Session"
+                        :value="`${stats.avgDuration}m`"
+                        :icon="Clock"
+                    />
                 </div>
 
                 <!-- Top AI Insight - Single Most Important -->
@@ -237,6 +218,6 @@ const tabs = [
                     :progress-photos="progressPhotos"
                 />
             </div>
-        </div>
+        
     </TrainerLayout>
 </template>

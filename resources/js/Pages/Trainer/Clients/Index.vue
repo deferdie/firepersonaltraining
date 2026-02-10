@@ -63,14 +63,14 @@ const handleSearch = () => {
         title="Clients"
         description="Manage and track all your clients"
     >
-        <div class="space-y-6">
-            <div class="flex items-center justify-between">
-                <Button @click="isAddClientModalOpen = true">
-                    <Plus class="size-4 mr-2" />
-                    Add Client
-                </Button>
-            </div>
+        <template #action>
+            <Button @click="isAddClientModalOpen = true">
+                <Plus class="size-4 mr-2" />
+                Add Client
+            </Button>
+        </template>
 
+        <div class="space-y-6">
             <!-- Stats Cards -->
             <div class="grid gap-4 md:grid-cols-3">
                 <StatCard
