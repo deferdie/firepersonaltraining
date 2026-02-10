@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Camera, Plus, MoreVertical, FileText, Trash2, TrendingUp, Calendar } from 'lucide-vue-next';
+import { Camera, Plus, FileText, Trash2, TrendingUp, Calendar } from 'lucide-vue-next';
 import Card from '@/Components/molecules/Card.vue';
 import CardContent from '@/Components/molecules/CardContent.vue';
 import CardHeader from '@/Components/molecules/CardHeader.vue';
@@ -78,11 +78,6 @@ const closeLightbox = () => {
                             <p v-if="entry.notes" class="text-sm text-gray-500">{{ entry.notes }}</p>
                         </div>
                         <DropdownMenu>
-                            <template #trigger>
-                                <Button variant="ghost" size="icon">
-                                    <MoreVertical class="size-4" />
-                                </Button>
-                            </template>
                             <template #content>
                                 <DropdownMenuItem>
                                     <Plus class="size-4 mr-2" />

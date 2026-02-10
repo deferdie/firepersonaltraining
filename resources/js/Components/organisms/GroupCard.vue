@@ -1,9 +1,8 @@
 <script setup>
-import { Users, MoreVertical } from 'lucide-vue-next';
+import { Users } from 'lucide-vue-next';
 import Card from '@/Components/molecules/Card.vue';
 import CardHeader from '@/Components/molecules/CardHeader.vue';
 import CardContent from '@/Components/molecules/CardContent.vue';
-import Button from '@/Components/atoms/Button.vue';
 import DropdownMenu from '@/Components/molecules/DropdownMenu.vue';
 import DropdownMenuItem from '@/Components/molecules/DropdownMenuItem.vue';
 
@@ -73,16 +72,6 @@ const handleManageMembers = () => {
                     </div>
                 </div>
                 <DropdownMenu @click.stop>
-                    <template #trigger>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            class="size-8 shrink-0"
-                            @click.stop.prevent
-                        >
-                            <MoreVertical class="size-4" />
-                        </Button>
-                    </template>
                     <template #content>
                         <DropdownMenuItem @click.stop="handleEdit">
                             Edit

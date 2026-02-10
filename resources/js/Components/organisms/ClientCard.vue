@@ -1,11 +1,10 @@
 <script setup>
-import { Calendar, Mail, MoreVertical, Phone } from 'lucide-vue-next';
+import { Calendar, Mail, Phone } from 'lucide-vue-next';
 import Card from '@/Components/molecules/Card.vue';
 import CardHeader from '@/Components/molecules/CardHeader.vue';
 import CardContent from '@/Components/molecules/CardContent.vue';
 import Avatar from '@/Components/atoms/Avatar.vue';
 import Badge from '@/Components/atoms/Badge.vue';
-import Button from '@/Components/atoms/Button.vue';
 import DropdownMenu from '@/Components/molecules/DropdownMenu.vue';
 import DropdownMenuItem from '@/Components/molecules/DropdownMenuItem.vue';
 
@@ -79,16 +78,6 @@ const handleScheduleSession = () => {
                     </div>
                 </div>
                 <DropdownMenu @click.stop>
-                    <template #trigger>
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            class="size-8 shrink-0"
-                            @click.stop.prevent
-                        >
-                            <MoreVertical class="size-4" />
-                        </Button>
-                    </template>
                     <template #content>
                         <DropdownMenuItem @click.stop="handleSendMessage">
                             <Mail class="size-4 mr-2" />

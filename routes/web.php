@@ -14,6 +14,7 @@ use App\Http\Controllers\Trainer\ClientNoteController as TrainerClientNoteContro
 use App\Http\Controllers\Trainer\GroupsController as TrainerGroupsController;
 use App\Http\Controllers\Trainer\MessagesController as TrainerMessagesController;
 use App\Http\Controllers\Trainer\LibraryController as TrainerLibraryController;
+use App\Http\Controllers\Trainer\LibraryHabitsController as TrainerLibraryHabitsController;
 use App\Http\Controllers\Trainer\SettingsController as TrainerSettingsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -77,7 +78,10 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
         Route::get('/library/assessments', fn () => redirect()->route('trainer.library.index'))->name('library.assessments.index');
         Route::get('/library/videos', fn () => redirect()->route('trainer.library.index'))->name('library.videos.index');
         Route::get('/library/documents', fn () => redirect()->route('trainer.library.index'))->name('library.documents.index');
-        Route::get('/library/habits', fn () => redirect()->route('trainer.library.index'))->name('library.habits.index');
+        Route::get('/library/habits', [TrainerLibraryHabitsController::class, 'index'])->name('library.habits.index');
+        Route::post('/library/habits', [TrainerLibraryHabitsController::class, 'store'])->name('library.habits.store');
+        Route::patch('/library/habits/{habit}', [TrainerLibraryHabitsController::class, 'update'])->name('library.habits.update');
+        Route::delete('/library/habits/{habit}', [TrainerLibraryHabitsController::class, 'destroy'])->name('library.habits.destroy');
         Route::get('/library/meal-plans', fn () => redirect()->route('trainer.library.index'))->name('library.meal-plans.index');
 
         Route::get('/packages', function () {

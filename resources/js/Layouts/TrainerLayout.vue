@@ -302,8 +302,11 @@ const handleLogout = () => {
                 <div v-if="backLinkConfig" class="mb-6">
                     <BackLink :href="backLinkConfig.href" :label="backLinkConfig.label" />
                 </div>
-                <div v-if="title && showHeader" class="mb-6">
+                <div v-if="title && showHeader" class="mb-6 flex items-center justify-between gap-4">
                     <PageHeader :title="title" :description="description" />
+                    <div v-if="$slots.action" class="shrink-0">
+                        <slot name="action" />
+                    </div>
                 </div>
                 <slot />
             </div>

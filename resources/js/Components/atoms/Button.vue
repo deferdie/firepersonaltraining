@@ -5,7 +5,7 @@ const props = defineProps({
     variant: {
         type: String,
         default: 'default',
-        validator: (value) => ['default', 'outline', 'ghost'].includes(value),
+        validator: (value) => ['default', 'outline', 'ghost', 'danger'].includes(value),
     },
     size: {
         type: String,
@@ -30,6 +30,7 @@ const classes = computed(() => {
         default: 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-500',
         outline: 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400 focus:ring-gray-500',
         ghost: 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 focus:ring-gray-500',
+        danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
     };
     
     // Size styles

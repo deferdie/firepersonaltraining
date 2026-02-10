@@ -17,9 +17,6 @@ class LibraryHabit extends Model
         'trainer_id',
         'name',
         'description',
-        'frequency',
-        'category',
-        'icon',
     ];
 
     public function trainer(): BelongsTo

@@ -1,5 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
+import { MoreVertical } from 'lucide-vue-next';
+import Button from '@/Components/atoms/Button.vue';
 
 const props = defineProps({
     align: {
@@ -42,7 +44,16 @@ const alignmentClasses = {
 <template>
     <div class="relative dropdown-menu-container">
         <div @click.stop="open = !open">
-            <slot name="trigger" />
+            <slot name="trigger">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    class="size-8 shrink-0"
+                    type="button"
+                >
+                    <MoreVertical class="size-4" />
+                </Button>
+            </slot>
         </div>
 
         <Transition
