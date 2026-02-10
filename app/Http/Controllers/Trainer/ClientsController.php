@@ -9,6 +9,8 @@ use App\Models\ClientProgram;
 use App\Models\Program;
 use App\Models\TrainerNote;
 use App\Models\Message;
+use App\Services\ScheduleEventTransformer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -173,6 +175,7 @@ class ClientsController extends Controller
                 $query->orderBy('taken_at', 'desc');
             },
             'habits.sourceLibraryHabit',
+            'schedules' => fn ($q) => $q->where('is_active', true)->orderBy('starts_at'),
         ]);
 
         // Get trainer notes
@@ -391,13 +394,21 @@ class ClientsController extends Controller
             ];
         })->toArray();
 
+        // Schedule data
+        $scheduleRangeStart = Carbon::now()->startOfMonth();
+        $scheduleRangeEnd = Carbon::now()->endOfMonth();
+        $calendarEvents = ScheduleEventTransformer::toCalendarEvents(
+            $client->schedules,
+            $scheduleRangeStart,
+            $scheduleRangeEnd
+        );
+        $upcomingSessions = ScheduleEventTransformer::toUpcomingSessions($client->schedules, 10);
+
         // Mock data for features not yet implemented
         $goals = []; // Will be implemented later
         $payments = []; // Will be implemented later
         $aiInsights = []; // Will be implemented later
         $smartActions = []; // Will be implemented later
-        $upcomingSessions = []; // Will be implemented later
-        $calendarEvents = []; // Will be implemented later
 
         // Calculate last active (most recent activity)
         $lastActive = 'Never';

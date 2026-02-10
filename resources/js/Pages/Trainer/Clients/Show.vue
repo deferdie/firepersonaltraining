@@ -193,6 +193,7 @@ const tabs = [
                 />
                 <ScheduleSection
                     v-if="activeSection === 'schedule'"
+                    :client-id="client.id"
                     :upcoming-sessions="upcomingSessions"
                     :calendar-events="calendarEvents"
                 />

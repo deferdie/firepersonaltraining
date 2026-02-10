@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Habit extends Model
@@ -33,5 +34,10 @@ class Habit extends Model
     public function sourceLibraryHabit(): BelongsTo
     {
         return $this->belongsTo(LibraryHabit::class, 'source_library_habit_id');
+    }
+
+    public function schedules(): MorphMany
+    {
+        return $this->morphMany(Schedule::class, 'schedulable');
     }
 }

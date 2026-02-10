@@ -13,6 +13,8 @@ use App\Http\Controllers\Trainer\Auth\RegisteredUserController as TrainerRegiste
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Http\Controllers\Trainer\ClientsController as TrainerClientsController;
 use App\Http\Controllers\Trainer\ClientHabitController as TrainerClientHabitController;
+use App\Http\Controllers\Trainer\ClientAssignedContentController as TrainerClientAssignedContentController;
+use App\Http\Controllers\Trainer\ClientScheduleController as TrainerClientScheduleController;
 use App\Http\Controllers\Trainer\ClientInvitationController as TrainerClientInvitationController;
 use App\Http\Controllers\Trainer\ClientNoteController as TrainerClientNoteController;
 use App\Http\Controllers\Trainer\GroupHabitController as TrainerGroupHabitController;
@@ -66,6 +68,15 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
 
         // Client habits (assign content)
         Route::post('/clients/{client}/habits', [TrainerClientHabitController::class, 'store'])->name('clients.habits.store');
+
+        // Client assigned content (for scheduling)
+        Route::get('/clients/{client}/assigned-content', [TrainerClientAssignedContentController::class, 'index'])->name('clients.assigned-content.index');
+
+        // Client schedules
+        Route::get('/clients/{client}/schedules', [TrainerClientScheduleController::class, 'index'])->name('clients.schedules.index');
+        Route::post('/clients/{client}/schedules', [TrainerClientScheduleController::class, 'store'])->name('clients.schedules.store');
+        Route::patch('/clients/{client}/schedules/{schedule}', [TrainerClientScheduleController::class, 'update'])->name('clients.schedules.update');
+        Route::delete('/clients/{client}/schedules/{schedule}', [TrainerClientScheduleController::class, 'destroy'])->name('clients.schedules.destroy');
 
         // Groups routes
         Route::get('/groups', [TrainerGroupsController::class, 'index'])->name('groups.index');

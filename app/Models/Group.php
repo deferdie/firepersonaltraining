@@ -39,4 +39,9 @@ class Group extends Model
     {
         return $this->morphMany(Habit::class, 'assignable');
     }
+
+    public function schedules(): MorphMany
+    {
+        return $this->morphMany(Schedule::class, 'assignable');
+    }
 }
