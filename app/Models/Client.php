@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Client extends Model
 {
@@ -67,5 +68,10 @@ class Client extends Model
     {
         return $this->hasOne(Conversation::class, 'target_id')
             ->where('type', 'client');
+    }
+
+    public function habits(): MorphMany
+    {
+        return $this->morphMany(Habit::class, 'assignable');
     }
 }

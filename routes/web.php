@@ -9,8 +9,10 @@ use App\Http\Controllers\Trainer\Auth\AuthenticatedSessionController as TrainerA
 use App\Http\Controllers\Trainer\Auth\RegisteredUserController as TrainerRegisteredUserController;
 use App\Http\Controllers\Trainer\DashboardController as TrainerDashboardController;
 use App\Http\Controllers\Trainer\ClientsController as TrainerClientsController;
+use App\Http\Controllers\Trainer\ClientHabitController as TrainerClientHabitController;
 use App\Http\Controllers\Trainer\ClientInvitationController as TrainerClientInvitationController;
 use App\Http\Controllers\Trainer\ClientNoteController as TrainerClientNoteController;
+use App\Http\Controllers\Trainer\GroupHabitController as TrainerGroupHabitController;
 use App\Http\Controllers\Trainer\GroupsController as TrainerGroupsController;
 use App\Http\Controllers\Trainer\MessagesController as TrainerMessagesController;
 use App\Http\Controllers\Trainer\LibraryController as TrainerLibraryController;
@@ -58,14 +60,20 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
         
         // Client notes routes
         Route::post('/clients/{client}/notes', [TrainerClientNoteController::class, 'store'])->name('clients.notes.store');
-        
+
+        // Client habits (assign content)
+        Route::post('/clients/{client}/habits', [TrainerClientHabitController::class, 'store'])->name('clients.habits.store');
+
         // Groups routes
         Route::get('/groups', [TrainerGroupsController::class, 'index'])->name('groups.index');
         Route::post('/groups', [TrainerGroupsController::class, 'store'])->name('groups.store');
         Route::get('/groups/{group}', [TrainerGroupsController::class, 'show'])->name('groups.show');
         Route::post('/groups/{group}/members', [TrainerGroupsController::class, 'storeMembers'])->name('groups.members.store');
         Route::delete('/groups/{group}/members/{client}', [TrainerGroupsController::class, 'destroyMember'])->name('groups.members.destroy');
-        
+
+        // Group habits (assign content)
+        Route::post('/groups/{group}/habits', [TrainerGroupHabitController::class, 'store'])->name('groups.habits.store');
+
         Route::get('/messages', [TrainerMessagesController::class, 'index'])->name('messages.index');
         Route::get('/messages/{conversation}', [TrainerMessagesController::class, 'show'])->name('messages.show');
         Route::post('/messages', [TrainerMessagesController::class, 'store'])->name('messages.store');
@@ -79,6 +87,7 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
         Route::get('/library/videos', fn () => redirect()->route('trainer.library.index'))->name('library.videos.index');
         Route::get('/library/documents', fn () => redirect()->route('trainer.library.index'))->name('library.documents.index');
         Route::get('/library/habits', [TrainerLibraryHabitsController::class, 'index'])->name('library.habits.index');
+        Route::get('/library/habits/list', [TrainerLibraryHabitsController::class, 'list'])->name('library.habits.list');
         Route::post('/library/habits', [TrainerLibraryHabitsController::class, 'store'])->name('library.habits.store');
         Route::patch('/library/habits/{habit}', [TrainerLibraryHabitsController::class, 'update'])->name('library.habits.update');
         Route::delete('/library/habits/{habit}', [TrainerLibraryHabitsController::class, 'destroy'])->name('library.habits.destroy');

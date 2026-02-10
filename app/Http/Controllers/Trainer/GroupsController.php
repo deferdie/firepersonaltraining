@@ -85,7 +85,11 @@ class GroupsController extends Controller
             abort(403);
         }
 
-        $group->load(['clients.programs.program', 'clients.workoutCompletions']);
+        $group->load([
+            'clients.programs.program',
+            'clients.workoutCompletions',
+            'habits.sourceLibraryHabit',
+        ]);
 
         $clientIds = $group->clients->pluck('id')->toArray();
         $colors = [
@@ -226,7 +230,20 @@ class GroupsController extends Controller
             'members' => $members,
             'availableClients' => $availableClients,
             'recentActivity' => $recentActivity,
-            'assignedContent' => [],
+            'assignedContent' => $group->habits->map(function ($habit) use ($group) {
+                return [
+                    'id' => $habit->id,
+                    'category' => 'habits',
+                    'name' => $habit->name,
+                    'description' => $habit->description,
+                    'status' => 'active',
+                    'assignedDate' => $habit->created_at->format('Y-m-d'),
+                    'sourceLibraryHabitId' => $habit->source_library_habit_id,
+                    'type' => 'habit',
+                    'assignedTo' => $group->clients->count(),
+                    'completionRate' => 0,
+                ];
+            })->values()->toArray(),
             'aiInsights' => $aiInsights,
         ]);
     }

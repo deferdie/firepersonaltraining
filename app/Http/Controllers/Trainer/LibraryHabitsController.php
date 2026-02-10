@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Trainer;
 
 use App\Http\Controllers\Controller;
 use App\Models\LibraryHabit;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -11,6 +12,30 @@ use Inertia\Response;
 
 class LibraryHabitsController extends Controller
 {
+    public function list(Request $request): JsonResponse
+    {
+        $trainerId = auth()->id();
+        $query = LibraryHabit::forTrainer($trainerId);
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $habits = $query->orderBy('name')->limit(50)->get()->map(function (LibraryHabit $habit) {
+            return [
+                'id' => $habit->id,
+                'name' => $habit->name,
+                'description' => $habit->description,
+            ];
+        });
+
+        return response()->json(['habits' => $habits]);
+    }
+
     public function index(Request $request): Response
     {
         $trainerId = auth()->id();

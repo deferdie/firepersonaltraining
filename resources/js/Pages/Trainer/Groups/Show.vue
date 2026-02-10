@@ -200,6 +200,8 @@ const handleInsightAction = (insight) => {
                 <GroupContentSection
                     v-if="activeSection === 'content'"
                     :assigned-content="assignedContent"
+                    assignable-type="group"
+                    :assignable-id="group.id"
                 />
                 <GroupActivitySection
                     v-if="activeSection === 'activity'"

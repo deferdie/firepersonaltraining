@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\ScopedByTrainer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class LibraryHabit extends Model
+class Habit extends Model
 {
-    use HasFactory, ScopedByTrainer;
-
-    protected $table = 'library_habits';
+    use HasFactory;
 
     protected $fillable = [
         'trainer_id',
+        'assignable_type',
+        'assignable_id',
         'name',
         'description',
+        'source_library_habit_id',
     ];
 
     public function trainer(): BelongsTo
@@ -25,8 +25,13 @@ class LibraryHabit extends Model
         return $this->belongsTo(User::class, 'trainer_id');
     }
 
-    public function assignedHabits(): HasMany
+    public function assignable(): MorphTo
     {
-        return $this->hasMany(Habit::class, 'source_library_habit_id');
+        return $this->morphTo();
+    }
+
+    public function sourceLibraryHabit(): BelongsTo
+    {
+        return $this->belongsTo(LibraryHabit::class, 'source_library_habit_id');
     }
 }

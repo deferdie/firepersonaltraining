@@ -172,6 +172,7 @@ class ClientsController extends Controller
             'progressPhotos' => function ($query) {
                 $query->orderBy('taken_at', 'desc');
             },
+            'habits.sourceLibraryHabit',
         ]);
 
         // Get trainer notes
@@ -377,12 +378,24 @@ class ClientsController extends Controller
             ];
         })->toArray();
 
+        // Assigned content (habits and future types)
+        $assignedContent = $client->habits->map(function ($habit) {
+            return [
+                'id' => $habit->id,
+                'category' => 'habits',
+                'name' => $habit->name,
+                'description' => $habit->description,
+                'status' => 'active',
+                'assignedDate' => $habit->created_at->format('Y-m-d'),
+                'sourceLibraryHabitId' => $habit->source_library_habit_id,
+            ];
+        })->toArray();
+
         // Mock data for features not yet implemented
         $goals = []; // Will be implemented later
         $payments = []; // Will be implemented later
         $aiInsights = []; // Will be implemented later
         $smartActions = []; // Will be implemented later
-        $assignedContent = []; // Will be implemented later
         $upcomingSessions = []; // Will be implemented later
         $calendarEvents = []; // Will be implemented later
 

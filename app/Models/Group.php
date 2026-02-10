@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Group extends Model
 {
@@ -32,5 +33,10 @@ class Group extends Model
     {
         return $this->hasOne(Conversation::class, 'target_id')
             ->where('type', 'group');
+    }
+
+    public function habits(): MorphMany
+    {
+        return $this->morphMany(Habit::class, 'assignable');
     }
 }

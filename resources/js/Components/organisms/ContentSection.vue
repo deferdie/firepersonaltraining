@@ -16,14 +16,25 @@ import CardHeader from '@/Components/molecules/CardHeader.vue';
 import Badge from '@/Components/atoms/Badge.vue';
 import Button from '@/Components/atoms/Button.vue';
 import Progress from '@/Components/atoms/Progress.vue';
+import AssignContentModal from '@/Components/organisms/AssignContentModal.vue';
 
 const props = defineProps({
     assignedContent: {
         type: Array,
         default: () => [],
     },
+    assignableType: {
+        type: String,
+        default: 'client',
+        validator: (v) => ['client', 'group'].includes(v),
+    },
+    assignableId: {
+        type: Number,
+        default: null,
+    },
 });
 
+const isAssignModalOpen = ref(false);
 const activeCategory = ref('all');
 
 const categories = [
@@ -87,7 +98,11 @@ const formatDate = (dateStr) => {
             <CardHeader>
                 <div class="flex items-center justify-between mb-4">
                     <h2 class="text-lg font-semibold">Assigned Content</h2>
-                    <Button size="sm">
+                    <Button
+                        v-if="assignableId != null"
+                        size="sm"
+                        @click="isAssignModalOpen = true"
+                    >
                         <Plus class="size-4 mr-1" />
                         Assign
                     </Button>
@@ -165,7 +180,13 @@ const formatDate = (dateStr) => {
                                 <p class="text-sm text-gray-500">{{ category.description }}</p>
                             </div>
                         </div>
-                        <Button variant="ghost" size="sm" class="shrink-0">
+                        <Button
+                            v-if="assignableId != null"
+                            variant="ghost"
+                            size="sm"
+                            class="shrink-0"
+                            @click="isAssignModalOpen = true"
+                        >
                             <Plus class="size-4 mr-1" />
                             Add
                         </Button>
@@ -248,7 +269,11 @@ const formatDate = (dateStr) => {
                             No {{ category.name.toLowerCase() }} yet
                         </p>
                         <p class="text-sm text-gray-500 mb-4">{{ category.description }}</p>
-                        <Button size="sm">
+                        <Button
+                            v-if="assignableId != null"
+                            size="sm"
+                            @click="isAssignModalOpen = true"
+                        >
                             <Plus class="size-4 mr-1" />
                             Add {{ category.name === 'Habits & Tracking' ? 'Habit' : category.name.slice(0, -1) }}
                         </Button>
@@ -256,6 +281,15 @@ const formatDate = (dateStr) => {
                 </CardContent>
             </Card>
         </div>
+
+        <AssignContentModal
+            v-if="assignableId != null"
+            :is-open="isAssignModalOpen"
+            :assignable-type="assignableType"
+            :assignable-id="assignableId"
+            @close="isAssignModalOpen = false"
+            @assigned="isAssignModalOpen = false"
+        />
     </div>
 </template>
 

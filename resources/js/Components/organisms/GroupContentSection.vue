@@ -1,24 +1,40 @@
 <script setup>
+import { ref } from 'vue';
 import { Plus, Dumbbell, FileText, CheckCircle2, Clipboard } from 'lucide-vue-next';
 import Card from '@/Components/molecules/Card.vue';
 import CardContent from '@/Components/molecules/CardContent.vue';
 import Badge from '@/Components/atoms/Badge.vue';
 import Button from '@/Components/atoms/Button.vue';
 import Progress from '@/Components/atoms/Progress.vue';
+import AssignContentModal from '@/Components/organisms/AssignContentModal.vue';
 
-defineProps({
+const props = defineProps({
     assignedContent: {
         type: Array,
         default: () => [],
     },
+    assignableType: {
+        type: String,
+        default: 'group',
+        validator: (v) => ['client', 'group'].includes(v),
+    },
+    assignableId: {
+        type: Number,
+        default: null,
+    },
 });
+
+const isAssignModalOpen = ref(false);
 </script>
 
 <template>
     <div class="space-y-6">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-xl font-semibold">Assigned Content</h2>
-            <Button>
+            <Button
+                v-if="props.assignableId != null"
+                @click="isAssignModalOpen = true"
+            >
                 <Plus class="size-4 mr-2" />
                 Assign Content
             </Button>
@@ -61,11 +77,23 @@ defineProps({
                 <Clipboard class="size-12 mx-auto mb-3 text-gray-400" />
                 <p class="font-semibold text-gray-900 mb-1">No assigned content yet</p>
                 <p class="text-sm text-gray-500 mb-4">Assign programs, documents, or videos to this group</p>
-                <Button>
-                    <Plus class="size-4 mr-2" />
-                    Assign Content
-                </Button>
+                <Button
+                v-if="props.assignableId != null"
+                @click="isAssignModalOpen = true"
+            >
+                <Plus class="size-4 mr-2" />
+                Assign Content
+            </Button>
             </CardContent>
         </Card>
+
+        <AssignContentModal
+            v-if="props.assignableId != null"
+            :is-open="isAssignModalOpen"
+            :assignable-type="props.assignableType"
+            :assignable-id="props.assignableId"
+            @close="isAssignModalOpen = false"
+            @assigned="isAssignModalOpen = false"
+        />
     </div>
 </template>

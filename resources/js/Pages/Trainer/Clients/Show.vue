@@ -199,6 +199,8 @@ const tabs = [
                 <ContentSection
                     v-if="activeSection === 'content'"
                     :assigned-content="assignedContent"
+                    assignable-type="client"
+                    :assignable-id="client.id"
                 />
                 <FoodJournalSection
                     v-if="activeSection === 'food'"
