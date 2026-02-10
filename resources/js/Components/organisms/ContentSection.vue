@@ -17,6 +17,26 @@ import Badge from '@/Components/atoms/Badge.vue';
 import Button from '@/Components/atoms/Button.vue';
 import Progress from '@/Components/atoms/Progress.vue';
 import AssignContentModal from '@/Components/organisms/AssignContentModal.vue';
+import ContentDetailsModal from '@/Components/organisms/ContentDetailsModal.vue';
+import ScheduleFormModal from '@/Components/organisms/ScheduleFormModal.vue';
+
+const CATEGORY_TO_SCHEDULABLE_TYPE = {
+    habits: 'habit',
+    programs: 'program',
+    assessments: 'assessment',
+    content: 'content',
+    goals: 'goal',
+    nutrition: 'nutrition',
+};
+
+const CATEGORY_LABEL = {
+    habits: 'Habit',
+    programs: 'Program',
+    assessments: 'Assessment',
+    content: 'Content',
+    goals: 'Goal',
+    nutrition: 'Nutrition',
+};
 
 const props = defineProps({
     assignedContent: {
@@ -36,6 +56,9 @@ const props = defineProps({
 
 const isAssignModalOpen = ref(false);
 const activeCategory = ref('all');
+const selectedItem = ref(null);
+const isScheduleModalOpen = ref(false);
+const schedulePreselection = ref(null);
 
 const categories = [
     {
@@ -90,6 +113,36 @@ const formatDate = (dateStr) => {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 };
+
+function openItemDetail(item) {
+    selectedItem.value = item;
+}
+
+function closeItemDetail() {
+    selectedItem.value = null;
+}
+
+function openScheduleForItem(item) {
+    const type = CATEGORY_TO_SCHEDULABLE_TYPE[item.category];
+    const label = CATEGORY_LABEL[item.category] ?? item.category;
+    schedulePreselection.value = {
+        type,
+        id: item.id,
+        title: `${label}: ${item.name}`,
+    };
+    selectedItem.value = null;
+    isScheduleModalOpen.value = true;
+}
+
+function onScheduleSaved() {
+    isScheduleModalOpen.value = false;
+    schedulePreselection.value = null;
+}
+
+function onScheduleModalClose() {
+    isScheduleModalOpen.value = false;
+    schedulePreselection.value = null;
+}
 </script>
 
 <template>
@@ -201,6 +254,7 @@ const formatDate = (dateStr) => {
                             v-for="item in getCategoryItems(category.id)"
                             :key="item.id"
                             class="flex items-start gap-4 p-4 rounded-lg border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer group"
+                            @click="openItemDetail(item)"
                         >
                             <component
                                 :is="category.icon"
@@ -290,6 +344,25 @@ const formatDate = (dateStr) => {
             :assignable-id="assignableId"
             @close="isAssignModalOpen = false"
             @assigned="isAssignModalOpen = false"
+        />
+
+        <ContentDetailsModal
+            :is-open="selectedItem != null"
+            :item="selectedItem"
+            :client-id="assignableType === 'client' ? assignableId : null"
+            @close="closeItemDetail"
+            @schedule="openScheduleForItem"
+        />
+
+        <ScheduleFormModal
+            v-if="assignableType === 'client' && assignableId != null"
+            :is-open="isScheduleModalOpen"
+            :client-id="assignableId"
+            :initial-schedulable-type="schedulePreselection?.type ?? null"
+            :initial-schedulable-id="schedulePreselection?.id ?? null"
+            :initial-title="schedulePreselection?.title ?? null"
+            @close="onScheduleModalClose"
+            @saved="onScheduleSaved"
         />
     </div>
 </template>

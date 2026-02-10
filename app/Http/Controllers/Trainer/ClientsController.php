@@ -157,6 +157,22 @@ class ClientsController extends Controller
             ->with('success', 'Client added successfully!');
     }
 
+    public function destroy(Client $client): RedirectResponse
+    {
+        if ($client->trainer_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $client->habits()->delete();
+        $client->schedules()->delete();
+        $client->conversation?->delete();
+        $client->delete();
+
+        return redirect()
+            ->route('trainer.clients.index')
+            ->with('success', 'Client removed.');
+    }
+
     public function show(Client $client): Response
     {
         // Ensure the client belongs to the authenticated trainer

@@ -9,6 +9,7 @@ import {
     User,
     Flame,
     Target,
+    LogOut,
 } from 'lucide-vue-next';
 import Avatar from '@/Components/atoms/Avatar.vue';
 
@@ -37,8 +38,13 @@ const props = defineProps({
 const emit = defineEmits(['update:activeTab']);
 
 const user = computed(() => page.props.auth?.user ?? null);
+const impersonation = computed(() => page.props.impersonation ?? null);
 
 const userName = computed(() => user.value?.name ?? 'There');
+
+const returnToTrainer = () => {
+    router.post(route('client.stop-impersonation'));
+};
 
 const initials = computed(() => {
     const name = userName.value;
@@ -84,6 +90,24 @@ const selectTab = (tabId) => {
 
 <template>
     <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+        <!-- Impersonation banner -->
+        <div
+            v-if="impersonation?.active"
+            class="bg-amber-500 text-amber-950 px-4 py-2 flex items-center justify-between gap-3"
+        >
+            <span class="text-sm font-medium">
+                Viewing as client. Logged in as {{ impersonation.trainer_name }}.
+            </span>
+            <button
+                type="button"
+                class="inline-flex items-center gap-1.5 rounded-md bg-amber-900/20 px-3 py-1.5 text-sm font-medium hover:bg-amber-900/30 focus:outline-none focus:ring-2 focus:ring-amber-700 focus:ring-offset-1"
+                @click="returnToTrainer"
+            >
+                <LogOut class="size-4" />
+                Return to trainer dashboard
+            </button>
+        </div>
+
         <!-- Mobile App Header -->
         <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white px-6 pt-8 pb-6 rounded-b-3xl shadow-lg">
             <div class="flex items-center justify-between mb-6">

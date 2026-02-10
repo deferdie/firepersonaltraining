@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { Link, router } from '@inertiajs/vue3';
 import TrainerLayout from '@/Layouts/TrainerLayout.vue';
 import {
     Send,
@@ -35,6 +35,7 @@ import FoodJournalSection from '@/Components/organisms/FoodJournalSection.vue';
 import PaymentsSection from '@/Components/organisms/PaymentsSection.vue';
 import NotesSection from '@/Components/organisms/NotesSection.vue';
 import ProgressPhotosSection from '@/Components/organisms/ProgressPhotosSection.vue';
+import ConfirmModal from '@/Components/molecules/ConfirmModal.vue';
 
 const props = defineProps({
     client: Object,
@@ -55,6 +56,51 @@ const props = defineProps({
 });
 
 const activeSection = ref('activity');
+const showResetPasswordModal = ref(false);
+const resetPasswordProcessing = ref(false);
+const showDeleteModal = ref(false);
+const deleteProcessing = ref(false);
+
+const openResetPasswordModal = () => {
+    showResetPasswordModal.value = true;
+};
+
+const closeResetPasswordModal = () => {
+    if (!resetPasswordProcessing.value) {
+        showResetPasswordModal.value = false;
+    }
+};
+
+const confirmResetPassword = () => {
+    resetPasswordProcessing.value = true;
+    router.post(route('trainer.clients.reset-password', props.client.id), {}, {
+        preserveScroll: true,
+        onFinish: () => {
+            resetPasswordProcessing.value = false;
+            showResetPasswordModal.value = false;
+        },
+    });
+};
+
+const openDeleteModal = () => {
+    showDeleteModal.value = true;
+};
+
+const closeDeleteModal = () => {
+    if (!deleteProcessing.value) {
+        showDeleteModal.value = false;
+    }
+};
+
+const confirmDelete = () => {
+    deleteProcessing.value = true;
+    router.delete(route('trainer.clients.destroy', props.client.id), {
+        onFinish: () => {
+            deleteProcessing.value = false;
+            showDeleteModal.value = false;
+        },
+    });
+};
 
 const tabs = [
     { id: 'activity', label: 'Activity', icon: Activity },
@@ -107,15 +153,22 @@ const tabs = [
                             <Send class="size-4 mr-2" />
                             Message
                         </Button>
+                        <Link
+                            v-if="client.has_completed_signup"
+                            :href="route('trainer.clients.impersonate', client.id)"
+                            method="post"
+                            as="button"
+                            class="inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-400 focus:ring-gray-500 px-3 py-1.5 text-sm gap-2 h-9"
+                        >
+                            <LogIn class="size-4 mr-2" />
+                            Login to Client Dashboard
+                        </Link>
                         <Button
                             v-if="client.has_completed_signup"
                             variant="outline"
                             size="sm"
+                            @click="openResetPasswordModal"
                         >
-                            <LogIn class="size-4 mr-2" />
-                            Login to Client Dashboard
-                        </Button>
-                        <Button variant="outline" size="sm">
                             <KeyRound class="size-4 mr-2" />
                             Reset Password
                         </Button>
@@ -123,6 +176,7 @@ const tabs = [
                             variant="outline"
                             size="sm"
                             class="text-red-600 hover:text-red-700 hover:border-red-600"
+                            @click="openDeleteModal"
                         >
                             <Trash2 class="size-4 mr-2" />
                             Delete
@@ -176,6 +230,26 @@ const tabs = [
                 <!-- Subnavigation -->
                 <Tabs v-model="activeSection" :tabs="tabs" />
             </div>
+
+            <ConfirmModal
+                :is-open="showResetPasswordModal"
+                title="Reset password"
+                description="A new password will be generated and sent to this client by email. They can use it to sign in to their client dashboard."
+                confirm-label="Send new password"
+                :processing="resetPasswordProcessing"
+                @close="closeResetPasswordModal"
+                @confirm="confirmResetPassword"
+            />
+            <ConfirmModal
+                :is-open="showDeleteModal"
+                title="Delete client"
+                :description="`Remove ${client.name} and all associated data (programs, workouts, food entries, notes, photos, schedules, and habits)? This cannot be undone.`"
+                confirm-label="Delete"
+                confirm-variant="danger"
+                :processing="deleteProcessing"
+                @close="closeDeleteModal"
+                @confirm="confirmDelete"
+            />
 
             <!-- Content Area - Based on Active Section -->
             <div class="mt-6">

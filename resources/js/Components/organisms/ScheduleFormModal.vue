@@ -8,7 +8,12 @@ import EndpointSelect from '@/Components/molecules/EndpointSelect.vue';
 import axios from 'axios';
 
 const SCHEDULABLE_TYPES = [
+    { id: 'program', label: 'Program' },
+    { id: 'assessment', label: 'Assessment' },
+    { id: 'content', label: 'Content' },
+    { id: 'goal', label: 'Goal' },
     { id: 'habit', label: 'Habit' },
+    { id: 'nutrition', label: 'Nutrition' },
 ];
 
 const props = defineProps({
@@ -21,6 +26,18 @@ const props = defineProps({
         required: true,
     },
     initialDate: {
+        type: String,
+        default: null,
+    },
+    initialSchedulableType: {
+        type: String,
+        default: null,
+    },
+    initialSchedulableId: {
+        type: Number,
+        default: null,
+    },
+    initialTitle: {
         type: String,
         default: null,
     },
@@ -105,6 +122,15 @@ watch(
             if (props.initialDate) {
                 form.value.starts_at = props.initialDate;
                 form.value.ends_at = '';
+            }
+            if (props.initialSchedulableType) {
+                form.value.schedulable_type = props.initialSchedulableType;
+            }
+            if (props.initialSchedulableId != null) {
+                form.value.schedulable_id = props.initialSchedulableId;
+            }
+            if (props.initialTitle) {
+                form.value.title = props.initialTitle;
             }
             if (props.editingEvent) {
                 form.value.title = props.editingEvent.title;

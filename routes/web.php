@@ -6,6 +6,7 @@ use App\Http\Controllers\Client\HomeController as ClientHomeController;
 use App\Http\Controllers\Client\MessagesController as ClientMessagesController;
 use App\Http\Controllers\Client\ProfileController as ClientProfilePageController;
 use App\Http\Controllers\Client\ProgressController as ClientProgressController;
+use App\Http\Controllers\Client\StopImpersonationController as ClientStopImpersonationController;
 use App\Http\Controllers\Client\WorkoutsController as ClientWorkoutsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Trainer\Auth\AuthenticatedSessionController as TrainerAuthenticatedSessionController;
@@ -15,8 +16,10 @@ use App\Http\Controllers\Trainer\ClientsController as TrainerClientsController;
 use App\Http\Controllers\Trainer\ClientHabitController as TrainerClientHabitController;
 use App\Http\Controllers\Trainer\ClientAssignedContentController as TrainerClientAssignedContentController;
 use App\Http\Controllers\Trainer\ClientScheduleController as TrainerClientScheduleController;
+use App\Http\Controllers\Trainer\ClientImpersonationController as TrainerClientImpersonationController;
 use App\Http\Controllers\Trainer\ClientInvitationController as TrainerClientInvitationController;
 use App\Http\Controllers\Trainer\ClientNoteController as TrainerClientNoteController;
+use App\Http\Controllers\Trainer\ClientPasswordResetController as TrainerClientPasswordResetController;
 use App\Http\Controllers\Trainer\GroupHabitController as TrainerGroupHabitController;
 use App\Http\Controllers\Trainer\GroupsController as TrainerGroupsController;
 use App\Http\Controllers\Trainer\MessagesController as TrainerMessagesController;
@@ -60,10 +63,16 @@ Route::prefix('trainer')->name('trainer.')->group(function () {
         Route::get('/clients', [TrainerClientsController::class, 'index'])->name('clients.index');
         Route::post('/clients', [TrainerClientsController::class, 'store'])->name('clients.store');
         Route::get('/clients/{client}', [TrainerClientsController::class, 'show'])->name('clients.show');
+        Route::delete('/clients/{client}', [TrainerClientsController::class, 'destroy'])->name('clients.destroy');
         Route::post('/clients/{client}/send-signup-invitation', [TrainerClientInvitationController::class, 'store'])
             ->middleware('throttle:10,1')
             ->name('clients.send-signup-invitation');
-        
+        Route::post('/clients/{client}/impersonate', [TrainerClientImpersonationController::class, 'store'])
+            ->name('clients.impersonate');
+        Route::post('/clients/{client}/reset-password', [TrainerClientPasswordResetController::class, 'store'])
+            ->middleware('throttle:10,1')
+            ->name('clients.reset-password');
+
         // Client notes routes
         Route::post('/clients/{client}/notes', [TrainerClientNoteController::class, 'store'])->name('clients.notes.store');
 
@@ -184,6 +193,7 @@ Route::prefix('client')->name('client.')->group(function () {
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::post('/stop-impersonation', [ClientStopImpersonationController::class, 'store'])->name('stop-impersonation');
         Route::post('/logout', [ClientAuthenticatedSessionController::class, 'destroy'])->name('logout');
     });
 });

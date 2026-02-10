@@ -7,6 +7,7 @@ import Badge from '@/Components/atoms/Badge.vue';
 import Button from '@/Components/atoms/Button.vue';
 import Progress from '@/Components/atoms/Progress.vue';
 import AssignContentModal from '@/Components/organisms/AssignContentModal.vue';
+import ContentDetailsModal from '@/Components/organisms/ContentDetailsModal.vue';
 
 const props = defineProps({
     assignedContent: {
@@ -25,6 +26,23 @@ const props = defineProps({
 });
 
 const isAssignModalOpen = ref(false);
+const selectedItem = ref(null);
+
+function openItemDetail(item) {
+    selectedItem.value = item;
+}
+
+function closeItemDetail() {
+    selectedItem.value = null;
+}
+
+function normalizedItem(item) {
+    if (!item) return null;
+    return {
+        ...item,
+        progress: item.completionRate ?? item.progress,
+    };
+}
 </script>
 
 <template>
@@ -44,8 +62,9 @@ const isAssignModalOpen = ref(false);
             <CardContent class="pt-6">
                 <div
                     v-for="(item, index) in assignedContent"
-                    :key="index"
-                    class="flex items-center justify-between p-4 rounded-lg border border-gray-200 mb-4 last:mb-0"
+                    :key="item.id ?? index"
+                    class="flex items-center justify-between p-4 rounded-lg border border-gray-200 mb-4 last:mb-0 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer"
+                    @click="openItemDetail(item)"
                 >
                     <div class="flex items-center gap-3">
                         <div
@@ -94,6 +113,13 @@ const isAssignModalOpen = ref(false);
             :assignable-id="props.assignableId"
             @close="isAssignModalOpen = false"
             @assigned="isAssignModalOpen = false"
+        />
+
+        <ContentDetailsModal
+            :is-open="selectedItem != null"
+            :item="selectedItem ? normalizedItem(selectedItem) : null"
+            :client-id="null"
+            @close="closeItemDetail"
         />
     </div>
 </template>
