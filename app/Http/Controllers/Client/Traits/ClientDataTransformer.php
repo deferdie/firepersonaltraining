@@ -1,73 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Client;
+namespace App\Http\Controllers\Client\Traits;
 
-use App\Http\Controllers\Client\Traits\ClientMessagesData;
-use App\Http\Controllers\Controller;
 use App\Models\Client;
-use App\Models\Conversation;
-use App\Models\ConversationMessage;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Inertia\Response;
 
-class DashboardController extends Controller
+trait ClientDataTransformer
 {
-    use ClientMessagesData;
-    public function index(Request $request): Response
-    {
-        $client = Client::where('user_id', auth()->id())->firstOrFail();
-
-        $client->load([
-            'trainer',
-            'programs.program',
-            'workoutCompletions.workout',
-        ]);
-
-        // Build client data with initials and color
-        $clientData = $this->transformClient($client);
-
-        // Build stats
-        $stats = $this->buildStats($client);
-
-        // Today's workout (mock until scheduling is built)
-        $todayWorkout = $this->getTodaysWorkout($client);
-
-        // Upcoming workouts (mock)
-        $upcomingWorkouts = $this->getUpcomingWorkouts($client);
-
-        // Program progress
-        $programProgress = $this->getProgramProgress($client);
-
-        // Recent achievements (mock)
-        $recentAchievements = $this->getRecentAchievements($client, $stats);
-
-        // Messages: 1:1 with trainer + group conversations
-        $messagesData = $this->getMessagesData($client, $request);
-
-        $initialTab = $request->get('tab', 'home');
-        if (! in_array($initialTab, ['home', 'workouts', 'progress', 'chat', 'profile'])) {
-            $initialTab = 'home';
-        }
-
-        return Inertia::render('Client/Dashboard', [
-            'client' => $clientData,
-            'stats' => $stats,
-            'todayWorkout' => $todayWorkout,
-            'upcomingWorkouts' => $upcomingWorkouts,
-            'programProgress' => $programProgress,
-            'recentAchievements' => $recentAchievements,
-            'conversations' => $messagesData['conversations'],
-            'messages' => $messagesData['messages'],
-            'unreadMessagesCount' => $messagesData['unreadCount'],
-            'conversationId' => $messagesData['conversationId'],
-            'selectedConversationId' => $messagesData['selectedConversationId'],
-            'initialTab' => $initialTab,
-        ]);
-    }
-
-    private function transformClient(Client $client): array
+    protected function transformClient(Client $client): array
     {
         $nameParts = explode(' ', $client->name);
         $initials = '';
@@ -120,7 +60,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function buildStats(Client $client): array
+    protected function buildStats(Client $client): array
     {
         $workoutCompletions = $client->workoutCompletions;
 
@@ -175,7 +115,16 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getTodaysWorkout(Client $client): ?array
+    protected function buildLayoutStats(array $stats): array
+    {
+        return [
+            'streak' => $stats['streak'] ?? 0,
+            'workoutsCount' => $stats['workoutsCount'] ?? 0,
+            'goalPercent' => $stats['goalPercent'] ?? 0,
+        ];
+    }
+
+    protected function getTodaysWorkout(Client $client): ?array
     {
         $activeProgram = $client->programs()->where('status', 'active')->with('program')->first();
         if (! $activeProgram) {
@@ -213,7 +162,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getUpcomingWorkouts(Client $client): array
+    protected function getUpcomingWorkouts(Client $client): array
     {
         return [
             [
@@ -233,7 +182,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getProgramProgress(Client $client): ?array
+    protected function getProgramProgress(Client $client): ?array
     {
         $activeProgram = $client->programs()->where('status', 'active')->with('program')->first();
         if (! $activeProgram || ! $activeProgram->program) {
@@ -265,7 +214,7 @@ class DashboardController extends Controller
         ];
     }
 
-    private function getRecentAchievements(Client $client, array $stats): array
+    protected function getRecentAchievements(Client $client, array $stats): array
     {
         $achievements = [];
 
@@ -302,7 +251,7 @@ class DashboardController extends Controller
         return array_slice($achievements, 0, 3);
     }
 
-    private function initialsFromName(string $name): string
+    protected function initialsFromName(string $name): string
     {
         $parts = explode(' ', $name);
         $initials = '';
@@ -315,3 +264,4 @@ class DashboardController extends Controller
         return substr($initials, 0, 2) ?: '?';
     }
 }
+

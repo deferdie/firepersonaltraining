@@ -3,17 +3,50 @@
 namespace App\Http\Controllers\Client;
 
 use App\Events\MessageSent;
+use App\Http\Controllers\Client\Traits\ClientDataTransformer;
+use App\Http\Controllers\Client\Traits\ClientMessagesData;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\Conversation;
-use App\Models\ConversationMessage;
 use App\Models\MessageRead;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class MessagesController extends Controller
 {
+    use ClientDataTransformer;
+    use ClientMessagesData;
+
+    public function index(Request $request): Response
+    {
+        $client = Client::where('user_id', auth()->id())->firstOrFail();
+
+        $client->load([
+            'trainer',
+            'programs.program',
+            'workoutCompletions.workout',
+        ]);
+
+        $clientData = $this->transformClient($client);
+        $stats = $this->buildStats($client);
+        $layoutStats = $this->buildLayoutStats($stats);
+        $messagesData = $this->getMessagesData($client, $request);
+
+        return Inertia::render('Client/Messages', [
+            'client' => $clientData,
+            'stats' => $stats,
+            'layoutStats' => $layoutStats,
+            'conversations' => $messagesData['conversations'],
+            'messages' => $messagesData['messages'],
+            'conversationId' => $messagesData['conversationId'],
+            'selectedConversationId' => $messagesData['selectedConversationId'],
+            'unreadMessagesCount' => $messagesData['unreadCount'],
+        ]);
+    }
+
     public function markRead(Conversation $conversation): JsonResponse
     {
         $client = Client::where('user_id', auth()->id())->firstOrFail();
@@ -117,7 +150,7 @@ class MessagesController extends Controller
         event(new MessageSent($message));
 
         return redirect()
-            ->route('client.dashboard', ['tab' => 'chat', 'conversation' => $conversation->id])
+            ->route('client.messages.index', ['conversation' => $conversation->id])
             ->with('success', 'Message sent.');
     }
 }

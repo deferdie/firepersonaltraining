@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue';
-import { usePage } from '@inertiajs/vue3';
+import { usePage, router } from '@inertiajs/vue3';
 import {
     Home,
     Dumbbell,
@@ -29,7 +29,7 @@ const props = defineProps({
     },
     activeTab: {
         type: String,
-        required: true,
+        default: 'home',
         validator: (v) => ['home', 'workouts', 'progress', 'chat', 'profile'].includes(v),
     },
 });
@@ -65,7 +65,19 @@ const navItems = [
     { id: 'profile', label: 'Profile', icon: User },
 ];
 
+const tabRoutes = {
+    home: 'client.home',
+    workouts: 'client.workouts',
+    progress: 'client.progress',
+    chat: 'client.messages.index',
+    profile: 'client.profile.index',
+};
+
 const selectTab = (tabId) => {
+    const routeName = tabRoutes[tabId];
+    if (routeName && tabId !== props.activeTab) {
+        router.visit(route(routeName), { preserveState: false });
+    }
     emit('update:activeTab', tabId);
 };
 </script>

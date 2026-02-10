@@ -2,8 +2,11 @@
 
 use App\Http\Controllers\Client\Auth\AuthenticatedSessionController as ClientAuthenticatedSessionController;
 use App\Http\Controllers\Client\Auth\RegisteredUserController as ClientRegisteredUserController;
-use App\Http\Controllers\Client\DashboardController as ClientDashboardController;
+use App\Http\Controllers\Client\HomeController as ClientHomeController;
 use App\Http\Controllers\Client\MessagesController as ClientMessagesController;
+use App\Http\Controllers\Client\ProfileController as ClientProfilePageController;
+use App\Http\Controllers\Client\ProgressController as ClientProgressController;
+use App\Http\Controllers\Client\WorkoutsController as ClientWorkoutsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Trainer\Auth\AuthenticatedSessionController as TrainerAuthenticatedSessionController;
 use App\Http\Controllers\Trainer\Auth\RegisteredUserController as TrainerRegisteredUserController;
@@ -132,12 +135,39 @@ Route::prefix('client')->name('client.')->group(function () {
     });
 
     Route::middleware(['auth', 'client'])->group(function () {
-        Route::get('/dashboard', [ClientDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/home', [ClientHomeController::class, 'index'])->name('home');
+        Route::get('/workouts', [ClientWorkoutsController::class, 'index'])->name('workouts');
+        Route::get('/progress', [ClientProgressController::class, 'index'])->name('progress');
+        Route::get('/messages/{conversation?}', [ClientMessagesController::class, 'index'])->name('messages.index');
+        Route::get('/profile', [ClientProfilePageController::class, 'index'])->name('profile.index');
+
+        Route::get('/dashboard', function (\Illuminate\Http\Request $request) {
+            $tab = $request->get('tab', 'home');
+            $routes = [
+                'home' => 'client.home',
+                'workouts' => 'client.workouts',
+                'progress' => 'client.progress',
+                'chat' => 'client.messages.index',
+                'profile' => 'client.profile.index',
+            ];
+
+            if ($tab === 'chat' && $request->has('conversation')) {
+                return redirect()->route(
+                    'client.messages.index',
+                    ['conversation' => $request->get('conversation')]
+                );
+            }
+
+            return redirect()->route($routes[$tab] ?? 'client.home');
+        })->name('dashboard');
+
         Route::post('/messages', [ClientMessagesController::class, 'store'])->name('messages.store');
         Route::post('/conversations/{conversation}/mark-read', [ClientMessagesController::class, 'markRead'])->name('conversations.mark-read');
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         Route::post('/logout', [ClientAuthenticatedSessionController::class, 'destroy'])->name('logout');
     });
 });
+

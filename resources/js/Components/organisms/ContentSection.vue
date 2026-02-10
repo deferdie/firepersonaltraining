@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import {
     Dumbbell,
     Clipboard,
@@ -76,10 +76,11 @@ const categories = [
     },
 ];
 
-const visibleCategories =
-    activeCategory.value === 'all'
+const visibleCategories = computed(() => {
+    return activeCategory.value === 'all'
         ? categories
         : categories.filter((cat) => cat.id === activeCategory.value);
+});
 
 const getCategoryItems = (categoryId) => {
     return props.assignedContent.filter((item) => item.category === categoryId);
